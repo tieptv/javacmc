@@ -6,22 +6,24 @@ import java.sql.SQLException;
 
 public class connection {
 
- 
+	public static Connection getConnection(String dbURL, String userName, String password) {
+		Connection con = null;
 
-	public static Connection getConnection(String dbURL, String userName, 
-            String password)  {
-	    Connection con =null;
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			con = (Connection) DriverManager.getConnection(dbURL,userName,password);
-            System.out.println("connect successfully!");
+			con = (Connection) DriverManager.getConnection(dbURL, userName, password);
+			System.out.println("connect successfully!");
 		} catch (SQLException e) {
-			System.out.println("Unconnected");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Not drive");
+			e.printStackTrace();
 		}
+
+		
+
 		return con;
 	}
-	
+
 }
