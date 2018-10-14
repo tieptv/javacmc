@@ -2,6 +2,7 @@ package Assignment_day5_nvtiep;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -103,7 +104,7 @@ public class Dao {
 			cs.registerOutParameter(1, java.sql.Types.INTEGER);
 			cs.execute();
 			int number = cs.getInt(1);
-			System.out.println("So hang bi xoa: "+number);
+			System.out.println("So hang bi xoa: " + number);
 			cs.close();
 
 		} catch (SQLException e) {
@@ -118,25 +119,53 @@ public class Dao {
 			}
 		}
 	}
+
 	public static void printinfomation(int id) {
 		con = connection.getConnection(DB_URL, USER_NAME, PASSWORD);
 		try {
 			CallableStatement cs = con.prepareCall("{call printcustomer(?,?,?,?,?)}");
-			cs.setInt(1,id);
+			cs.setInt(1, id);
 			cs.registerOutParameter(2, java.sql.Types.VARCHAR);
 			cs.registerOutParameter(3, java.sql.Types.INTEGER);
 			cs.registerOutParameter(4, java.sql.Types.INTEGER);
 			cs.registerOutParameter(5, java.sql.Types.VARCHAR);
 			cs.execute();
 			String name = cs.getString(2);
-			int orderid=cs.getInt(3);
-			int amount=cs.getInt(4);
+			int orderid = cs.getInt(3);
+			int amount = cs.getInt(4);
 			String maker = cs.getString(5);
-			System.out.print(name+"\t"+orderid+"\t"+amount+"\t"+maker);
+			System.out.print(name + "\t" + orderid + "\t" + amount + "\t" + maker);
 			cs.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void Insert(Car c) {
+		con = connection.getConnection(DB_URL, USER_NAME, PASSWORD);
+		String query = "insert into car values (?,?,?,?,?,?)";
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, c.getId());
+			ps.setString(2, c.getMaker());
+			ps.setString(3, c.getModel());
+			ps.setInt(4, c.getYear());
+			ps.setString(5, c.getColor());
+			ps.setString(6, c.getNote());
+			ps.executeUpdate();
+			System.out.println("Insert Successfully!");
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println("Insert Unsuccessfully!");
 			e.printStackTrace();
 		} finally {
 			try {

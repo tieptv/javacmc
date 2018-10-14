@@ -12,12 +12,14 @@ public class connection {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			con = (Connection) DriverManager.getConnection(dbURL, userName, password);
-			System.out.println("connect successfully!");
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.out.println("Unconnected!");
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
+			System.out.println("Unconnected!");
 			e.printStackTrace();
 		}
 
