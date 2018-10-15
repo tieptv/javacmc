@@ -4,16 +4,16 @@ import java.util.Scanner;
 public class main {
 	
 public static void main(String[] args) {
-	Dao.ListAllCar();
-	/*System.out.println("---cau b---");
+	//Dao.ListAllCar();
+	System.out.println("---cau b---");
 	Dao.showInfo();
 	System.out.println("---cau c---");
 	Dao.MaxMaker();
 	System.out.println("---cau d---");
 	Dao.RemoveStatus();
 	System.out.println("---cau e---");
-	Dao.printinfomation(1);
-	*/
+	Dao.printinfomation(5);
+	/*
 	Car c=new Car();
 	Scanner scan=new Scanner(System.in);
 	System.out.println("Thêm xe");
@@ -32,6 +32,7 @@ public static void main(String[] args) {
     c.setNote(scan.nextLine());
     
     Dao.Insert(c);
-	Dao.ListAllCar();
+    */
+	//Dao.ListAllCar();
 }
 }

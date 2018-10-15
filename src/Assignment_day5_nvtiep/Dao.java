@@ -48,7 +48,7 @@ public class Dao {
 		con = connection.getConnection(DB_URL, USER_NAME, PASSWORD);
 		try {
 			Statement st = con.createStatement();
-			String query = "select name,amount from customer inner join car_order on customer.customerid=car_order.customerid";
+			String query = "select name,amount from customer inner join car_order on customer.customerid=car_order.customerid group by name,amount order by amount asc";
 			ResultSet rs = st.executeQuery(query);
 			System.out.println("Name\tAmount");
 			while (rs.next()) {
