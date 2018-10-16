@@ -41,7 +41,7 @@ public class Dao {
 			con.close();
 			return list;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return null;
 		}
 
@@ -70,7 +70,7 @@ public class Dao {
 			con.close();
 			return list;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return null;
 		}
 
@@ -94,6 +94,7 @@ public class Dao {
 			con.close();
 			return number;
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}

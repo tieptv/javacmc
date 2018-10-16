@@ -1,0 +1,99 @@
+/*a
+*/
+CREATE TABLE CUSTOMER (
+    CustomerID int not null primary key identity ,
+    Name varchar(50) not null,
+    Phone varchar(10) not null,
+    Email varchar(100) not null,
+    Address varchar(100) not null,
+	Note varchar(200) 
+);
+CREATE TABLE CAR (
+    CarID varchar(5) primary key not null,
+    Maker varchar(20) not null,
+    Model varchar(30) not null,
+    Year int not null,
+    Color varchar(10),
+	Note varchar(200)
+);
+CREATE TABLE CAR_ORDER (
+    OrderID int primary key not null identity,
+    CustomerID int not null,
+    CarID varchar(5) not null,
+    Amount float default 1 not null,
+	SalePrice float not null,
+	OrderDate datetime not null,
+	DeliveryDate datetime,
+	DeliveryAddress varchar(200) not null,
+    Status char(1)default '0' not null,
+	Note varchar(200)
+);
+ALTER TABLE CAR_ORDER
+ADD FOREIGN KEY (CarID) REFERENCES CAR(CarID);
+ALTER TABLE CAR_ORDER
+ADD FOREIGN KEY (CustomerID) REFERENCES CUSTOMER(CustomerID);
+
+
+insert into customer values ('tiep','0396608207','tiepnguyenvantv97@gmail.com','Hung Yen','khong co gi ca');
+insert into customer values ('thao','0396608207','tiepnguyenvantv97@gmail.com','Hung Yen','khong co gi ca');
+insert into customer values ('tuyen','0396608207','tiepnguyenvantv97@gmail.com','Hung Yen','khong co gi ca');
+insert into customer values ('ly','0396608207','tiepnguyenvantv97@gmail.com','Hung Yen','khong co gi ca');
+insert into customer values ('dung','0396608207','tiepnguyenvantv97@gmail.com','Hung Yen','khong co gi ca');
+
+insert into car values ('01','HONDA','luxury',2018,'black','khong co gi');
+insert into car values ('02','TOYOTA','sport',2018,'red','khong co gi');
+insert into car values ('03','NISSAN','luxury',2018,'pink','khong co gi');
+insert into car values ('04','HONDA','sport',2018,'yellow','khong co gi');
+insert into car values ('05','TOYOTA','luxury',2018,'black','khong co gi');
+
+insert into car_order values (1,'02',1,500.5,'1/1/2018','2/21/2018','toa nha cmc','2',null);
+insert into car_order values (2,'01',3,500.5,'1/1/2018','2/21/2018','toa nha cmc','1',null);
+insert into car_order values (4,'03',4,500.5,'1/1/2018','2/21/2018','toa nha cmc','1',null);
+insert into car_order values (5,'04',1,500.5,'1/1/2018','2/21/2018','toa nha cmc','0',null);
+insert into car_order values (3,'03',5,500.5,'1/1/2018','2/21/2018','toa nha cmc','0',null);
+
+/*b
+select name,amount
+from customer inner join car_order on customer.customerid=car_order.customerid
+order by amount asc;
+/*c
+create function maxmaker()
+returns table as
+return 
+select car.maker,sum(amount) as Amount
+from car_order inner join car on car.carid=car_order.carid
+group by car.Maker
+having sum(amount)>= all (
+select sum(amount)
+from car_order inner join car on car.carid=car_order.carid
+where year(DeliveryDate)=year(GETDATE())
+group by car.Maker);
+/*d
+CREATE PROCEDURE removestatus(@ret int out)
+as
+begin
+select @ret=count(*) from CAR_ORDER where Status='2' and year(CAR_ORDER.DeliveryDate)<year(getdate())
+delete CAR_ORDER where Status='2'
+end
+/*e
+CREATE PROCEDURE printcustomer(@custid int)
+as begin
+select Name,OrderID,Amount,Maker
+from car inner join car_order on car.CarID=car_order.CarID inner join customer on customer.CustomerID=car_order.CustomerID
+where Status='0' and customer.CustomerID=@custid
+end 
+/*f
+create trigger input_car_order on car_order
+after insert
+as
+begin
+declare @orderdate datetime
+ select @orderdate= dateadd(day,15,orderdate) from inserted
+declare @deliverydate datetime
+select @deliverydate = deliverydate from inserted
+if(@deliverydate<@orderdate)
+begin
+print 'car khong phu hop'
+ rollback tran
+end
+end
