@@ -7,9 +7,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import connect.ConnectDB;
 
 public class Dao {
+	private static Dao _instance;
+
+	/**
+	 * tieptv 9:26:59 AM
+	 * Trả về 1 đối tượng static Dao
+	 */
+	public static Dao instance() {
+		if (_instance == null)
+			_instance = new Dao();
+		return _instance;
+	}
 
 	public List<CusOrder> listCustomer(String sql) {
 		Connection con = null;
@@ -35,6 +47,11 @@ public class Dao {
 
 	}
 
+	/**
+	 * 
+	 * tieptv 9:28:13 AM
+	 * Trả về danh sách hãng xe bán được nhiều nhất
+	 */
 	public List<BestMaker> listMaker(String sql) {
 		Connection con = null;
 		List<BestMaker> list = new ArrayList<BestMaker>();
@@ -59,11 +76,17 @@ public class Dao {
 
 	}
 
+	/**
+	 * 
+	 * tieptv 9:29:30 AM
+	 * Trả về số đơn hàng đã bị xóa khi status =2
+	 */
 	public int removeStatus() {
 		Connection con = null;
 		try {
 			con = ConnectDB.getConnection();
-			CallableStatement cs = con.prepareCall("{call removestatus(?)}");
+			String sql = "{call removestatus(?)}";
+			CallableStatement cs = con.prepareCall(sql);
 			cs.registerOutParameter(1, java.sql.Types.INTEGER);
 			cs.execute();
 			int number = cs.getInt(1);
@@ -75,37 +98,34 @@ public class Dao {
 		}
 	}
 
-	public List<CusOrderInfo> orderDetail(int custID) {
+	/**
+	 * 
+	 * tieptv 9:31:10 AM
+	 * Trả về sách đơn đặt hàng theo id khách hàng
+	 */
+	public List<CusOrderInfo> CustOrderID(int custID) {
 		Connection con = null;
 		List<CusOrderInfo> list = new ArrayList<CusOrderInfo>();
 		try {
 			con = ConnectDB.getConnection();
-			String sql = "{call printcustomer(?,?,?,?,?)}";
+			String sql = "{call printcustomer(?)}";
 			CallableStatement cs = con.prepareCall(sql);
 			cs.setInt(1, custID);
-			cs.registerOutParameter(2, java.sql.Types.VARCHAR);
-			cs.registerOutParameter(3, java.sql.Types.INTEGER);
-			cs.registerOutParameter(4, java.sql.Types.INTEGER);
-			cs.registerOutParameter(5, java.sql.Types.VARCHAR);
 			ResultSet rs = cs.executeQuery();
 			while (rs.next()) {
 				CusOrderInfo c = new CusOrderInfo();
-				c.setName(cs.getString(2));
-				c.setOrderID(cs.getInt(3));
-				c.setAmount(cs.getInt(4));
-				c.setMaker(cs.getString(5));
-				;
+				c.setName(rs.getString(1));
+				c.setOrderID(rs.getInt(2));
+				c.setAmount(rs.getInt(3));
+				c.setMaker(rs.getString(4));
 				list.add(c);
 			}
-			CusOrderInfo c = new CusOrderInfo();
-			c.setName(cs.getString(2));
-			c.setOrderID(cs.getInt(3));
-			c.setAmount(cs.getInt(4));
-			c.setMaker(cs.getString(5));
+			rs.close();
 			cs.close();
 			con.close();
 			return list;
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

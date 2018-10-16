@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Dao {
-	private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=CMC_FINAL;"
+	private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=tieptv;"
 			+ "integratedSecurity=true";
 	private static String USER_NAME = "sa";
 	private static String PASSWORD = "123";
